@@ -12,6 +12,16 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
+  responsive_sizer: ^3.3.1
+  flutter_bloc: ^9.1.1
+  go_router: ^17.0.0
+  get_it: ^9.0.5
+  dio: ^5.9.0
+  google_fonts: ^6.3.2
+  another_flushbar: ^1.12.32
+  either_dart: ^1.0.0
+  json_annotation: ^4.9.0
+  freezed_annotation: ^3.1.0
 
 dev_dependencies:
   flutter_test:
