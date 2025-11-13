@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:odpalgadke/common/router/go_router.dart';
-import 'package:odpalgadke/common/util/colors.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class OdpalGadke extends StatelessWidget {
   const OdpalGadke({super.key});
@@ -10,13 +9,11 @@ class OdpalGadke extends StatelessWidget {
   Widget build(BuildContext context) {
     return ResponsiveSizer(
       builder: (_, _, _) {
-        return MaterialApp.router(
+        return ShadcnApp.router(
           title: 'OdpalGadke',
           debugShowCheckedModeBanner: false,
-          theme: getAppTheme(),
-          darkTheme: ThemeData.dark(),
-          themeMode: ThemeMode.light,
           routerConfig: router,
+          theme: ThemeData(colorScheme: ColorSchemes.darkGreen, radius: 0.5),
         );
       },
     );
