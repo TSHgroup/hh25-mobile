@@ -1,9 +1,12 @@
 import 'package:go_router/go_router.dart';
+import 'package:odpalgadke/features/scenario/data/models/scenario_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class ScenarioCard extends StatelessWidget {
-  const ScenarioCard({super.key});
+  final ScenarioModel scenario;
+
+  const ScenarioCard({super.key, required this.scenario});
 
   @override
   Widget build(BuildContext context) {
@@ -15,22 +18,18 @@ class ScenarioCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              PrimaryBadge(child: const Text("Biznes")),
-              SecondaryBadge(child: const Text("Published")),
+              PrimaryBadge(child: Text(scenario.category)),
+              SecondaryBadge(child: Text(scenario.visibility)),
             ],
           ),
           SizedBox(height: 2.h),
 
-          const Text("Rozmowa o podwyżce").bold.x2Large,
-          const Text("Ćwicz negocjacje wynagrodzenia z menadżerem IT").normal.light,
+          Text(scenario.title).bold.x2Large,
+          if (scenario.subtitle != null) Text(scenario.subtitle!).normal.light,
           SizedBox(height: 2.h),
 
-          const Text(
-            "W tym scenariuszu wcielasz się w pracownika, który chce omówić "
-            "możliwość podwyżki z przełożonym. Celem jest utrzymanie "
-            "spokoju, logiczne argumentowanie i reagowanie na emocje rozmówcy.",
-          ).small.blockQuote,
-          SizedBox(height: 2.h),
+          if (scenario.description != null)
+            Text(scenario.description!).small.blockQuote,
 
           Padding(
             padding: EdgeInsetsGeometry.symmetric(vertical: 1.5.h),
@@ -41,7 +40,7 @@ class ScenarioCard extends StatelessWidget {
             spacing: 10.sp,
             children: [
               Icon(BootstrapIcons.personBoundingBox),
-              const Text('Menadźer IT').semiBold,
+              Text(scenario.aiPersona.name).semiBold,
             ],
           ),
           SizedBox(height: 1.h),
@@ -50,10 +49,17 @@ class ScenarioCard extends StatelessWidget {
             spacing: 10.sp,
             runSpacing: 8.sp,
             children: [
-              OutlineBadge(child: Text('Spokojny, wymagający').normal),
-              OutlineBadge(child: Text('Styl: realistyczny').normal),
-              OutlineBadge(child: Text('Ton: neutralny').normal),
-              OutlineBadge(child: Text('Empatyczny').normal),
+              if (scenario.aiPersona.personality != null)
+                ...scenario.aiPersona.personality!.split(', ').map((
+                    personality) =>
+                    OutlineBadge(
+                      child: Text(personality).normal,
+                    ),),
+              OutlineBadge(
+                  child: Text('Styl: ${scenario.aiPersona.responseStyle}')
+                      .normal),
+              OutlineBadge(child: Text(
+                  'Ton: ${scenario.aiPersona.emotionModel.baseline}').normal),
             ],
           ),
 
@@ -64,9 +70,14 @@ class ScenarioCard extends StatelessWidget {
 
           const Text("Cele rozmowy:").semiBold,
           SizedBox(height: 0.5.h),
-          const Text("Utrzymać spokój").xSmall.li,
-          const Text("Mówić logicznie").xSmall.li,
-          const Text("Przekonać do podwyżki").xSmall.li,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ...?scenario.objectives?.toList().map(
+                    (objective) => Text(objective).xSmall.li,
+              ),
+            ],
+          ),
           SizedBox(height: 2.h),
 
           Column(
@@ -77,9 +88,7 @@ class ScenarioCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Button(
-                    onPressed: () {
-                      context.push('/scenario');
-                    },
+                    onPressed: () => context.push('/scenario'),
                     style: ButtonVariance.primary,
                     child: Row(
                       spacing: 12.sp,
