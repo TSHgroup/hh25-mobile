@@ -17,19 +17,15 @@ class ScenarioCard extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              PrimaryBadge(child: Text(scenario.category)),
-              SecondaryBadge(child: Text(scenario.visibility)),
-            ],
+            children: [PrimaryBadge(child: Text(scenario.category))],
           ),
           SizedBox(height: 2.h),
 
           Text(scenario.title).bold.x2Large,
-          if (scenario.subtitle != null) Text(scenario.subtitle!).normal.light,
+          Text(scenario.subtitle).normal.light,
           SizedBox(height: 2.h),
 
-          if (scenario.description != null)
-            Text(scenario.description!).small.blockQuote,
+          Text(scenario.description).small.blockQuote,
 
           Padding(
             padding: EdgeInsetsGeometry.symmetric(vertical: 1.5.h),
@@ -40,7 +36,7 @@ class ScenarioCard extends StatelessWidget {
             spacing: 10.sp,
             children: [
               Icon(BootstrapIcons.personBoundingBox),
-              Text(scenario.aiPersona.name).semiBold,
+              Text(scenario.persona).semiBold,
             ],
           ),
           SizedBox(height: 1.h),
@@ -49,17 +45,17 @@ class ScenarioCard extends StatelessWidget {
             spacing: 10.sp,
             runSpacing: 8.sp,
             children: [
-              if (scenario.aiPersona.personality != null)
-                ...scenario.aiPersona.personality!.split(', ').map((
-                    personality) =>
-                    OutlineBadge(
-                      child: Text(personality).normal,
-                    ),),
-              OutlineBadge(
-                  child: Text('Styl: ${scenario.aiPersona.responseStyle}')
-                      .normal),
-              OutlineBadge(child: Text(
-                  'Ton: ${scenario.aiPersona.emotionModel.baseline}').normal),
+              // if (scenario.aiPersona.personality != null)
+              //   ...scenario.aiPersona.personality!.split(', ').map((
+              //       personality) =>
+              //       OutlineBadge(
+              //         child: Text(personality).normal,
+              //       ),),
+              // OutlineBadge(
+              //     child: Text('Styl: ${scenario.aiPersona.responseStyle}')
+              //         .normal),
+              // OutlineBadge(child: Text(
+              //     'Ton: ${scenario.aiPersona.emotionModel.baseline}').normal),
             ],
           ),
 
@@ -73,8 +69,8 @@ class ScenarioCard extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ...?scenario.objectives?.toList().map(
-                    (objective) => Text(objective).xSmall.li,
+              ...scenario.objectives.toList().map(
+                (objective) => Text(objective).xSmall.li,
               ),
             ],
           ),
@@ -88,19 +84,18 @@ class ScenarioCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Button(
-                    onPressed: () => context.push('/scenario'),
+                    onPressed: () => context.push('/scenario', extra: scenario),
                     style: ButtonVariance.primary,
                     child: Row(
                       spacing: 12.sp,
                       children: [
-                        Icon(LucideIcons.gamepad2),
-                        const Text("Zagraj scenariusz"),
+                        Icon(LucideIcons.info),
+                        const Text("Dowiedz się więcej"),
                       ],
                     ),
                   ),
                 ],
               ),
-              Text('Symulacja potrwa ok. 5 minut').xSmall,
             ],
           ),
         ],

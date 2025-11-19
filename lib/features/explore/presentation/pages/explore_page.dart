@@ -1,6 +1,7 @@
 import 'package:odpalgadke/common/injection/dependency_injection.dart';
 import 'package:odpalgadke/common/util/either/either_builder.dart';
 import 'package:odpalgadke/features/home/handle_page_change.dart';
+import 'package:odpalgadke/features/home/presentation/widgets/home_app_bar_widget.dart';
 import 'package:odpalgadke/features/scenario/data/repositories/scenario_repository.dart';
 import 'package:odpalgadke/features/scenario/presentation/widgets/scenario_card.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -45,25 +46,7 @@ class _ExplorePageState extends State<ExplorePage> {
         ),
       ],
       showLoadingSparks: true,
-      headers: [
-        AppBar(
-          title: const Text('OdpalGadkę'),
-          subtitle: const Text('Witaj, ThisKarolGajda'),
-          leading: [
-            Avatar(
-              backgroundColor: Colors.red,
-              initials: Avatar.getInitials('sunarya-thito'),
-              provider: const NetworkImage(
-                'https://avatars.githubusercontent.com/u/64018564?v=4',
-              ),
-              badge: AvatarBadge(size: 14.sp, color: Colors.green),
-            ),
-          ],
-          trailing: [
-            GestureDetector(child: const Icon(Icons.search), onTap: () {}),
-          ],
-        ),
-      ],
+      headers: [HomeAppBarWidget()],
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -88,7 +71,7 @@ class _ExplorePageState extends State<ExplorePage> {
             ),
 
             EitherBuilder(
-              future: get<ScenarioRepository>().fetchScenarios(),
+              future: get<ScenarioRepository>().fetchScenarios(0),
               builder: (scenarios) {
                 return Column(
                   children: [

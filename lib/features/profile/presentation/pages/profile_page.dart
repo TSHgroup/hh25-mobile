@@ -1,9 +1,22 @@
+import 'package:go_router/go_router.dart';
+import 'package:odpalgadke/common/injection/dependency_injection.dart';
+import 'package:odpalgadke/features/auth/data/auth_secure_storage.dart';
+import 'package:odpalgadke/features/auth/presentation/blocs/current_user.dart';
 import 'package:odpalgadke/features/home/handle_page_change.dart';
+import 'package:odpalgadke/features/home/presentation/widgets/home_app_bar_widget.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  final _usernameKey = const TextFieldKey(#username);
+  final _languageKey = const TextFieldKey(#language);
 
   NavigationItem buildButton(String label, IconData icon) {
     return NavigationItem(
@@ -34,36 +47,58 @@ class ProfilePage extends StatelessWidget {
         ),
       ],
       showLoadingSparks: true,
-      headers: [
-        AppBar(
-          title: const Text('OdpalGadkę'),
-          subtitle: const Text('Witaj, ThisKarolGajda'),
-          leading: [
-            Avatar(
-              backgroundColor: Colors.red,
-              initials: Avatar.getInitials('sunarya-thito'),
-              provider: const NetworkImage(
-                'https://avatars.githubusercontent.com/u/64018564?v=4',
-              ),
-              badge: AvatarBadge(
-                size: 14.sp,
-                color: Colors.green,
-              ),
-            ),
-          ],
-          trailing: [
-            OutlineButton(
-              onPressed: () {},
-              density: ButtonDensity.icon,
-              child: const Icon(Icons.search),
-            ),
-          ],
-        ),
-      ],
+      headers: [HomeAppBarWidget()],
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: [const Text('Profile').p],
+          children: [
+            const Text('Profile').p,
+            SecondaryButton(
+              child: const Text('Wyloguj się'),
+              onPressed: () async {
+                await get<AuthSecureStorage>().clearTokens();
+                if (context.mounted) {
+                  context.replace('/auth');
+                }
+              },
+            ),
+
+            // SizedBox(
+            //   width: 92.w,
+            //   child: Accordion(
+            //     items: [
+            //       AccordionItem(
+            //         trigger: AccordionTrigger(child: Text('Username')),
+            //         content: TextField(),
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            SizedBox(
+              width: 92.w,
+              child: Form(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    FormField(
+                      key: _usernameKey,
+                      label: const Text('Username'),
+                      hint: const Text('This is your public display name'),
+                      validator: const LengthValidator(min: 4),
+                      showErrors: const {
+                        FormValidationMode.changed,
+                        FormValidationMode.submitted,
+                      },
+                      child: TextField(
+                        initialValue: currentUser!.profile.displayName,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

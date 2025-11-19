@@ -1,7 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:odpalgadke/features/auth/presentation/pages/auth_login_page.dart';
 import 'package:odpalgadke/features/auth/presentation/pages/auth_page.dart';
+import 'package:odpalgadke/features/auth/presentation/pages/auth_register_page.dart';
+import 'package:odpalgadke/features/auth/presentation/pages/auth_token_page.dart';
 import 'package:odpalgadke/features/explore/presentation/pages/explore_page.dart';
 import 'package:odpalgadke/features/home/presentation/pages/home_page.dart';
 import 'package:odpalgadke/features/library/presentation/pages/library_page.dart';
@@ -25,15 +28,24 @@ T? extraOrNull<T>(GoRouterState state) {
 }
 
 final router = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/auth',
   debugLogDiagnostics: kDebugMode,
   navigatorKey: navigatorKey,
   routes: [
     GoRoute(path: '/auth', builder: (context, state) => AuthPage()),
+    GoRoute(path: '/auth/token', builder: (context, state) => AuthTokenPage()),
+    GoRoute(path: '/auth/login', builder: (context, state) => AuthLoginPage()),
+    GoRoute(
+      path: '/auth/register',
+      builder: (context, state) => AuthRegisterPage(),
+    ),
     GoRoute(path: '/home', builder: (context, state) => HomePage()),
     GoRoute(path: '/explore', builder: (context, state) => ExplorePage()),
     GoRoute(path: '/library', builder: (context, state) => LibraryPage()),
     GoRoute(path: '/profile', builder: (context, state) => ProfilePage()),
-    GoRoute(path: '/scenario', builder: (context, state) => ScenarioPage()),
+    GoRoute(
+      path: '/scenario',
+      builder: (context, state) => ScenarioPage(scenario: extra(state)),
+    ),
   ],
 );

@@ -7,5 +7,5 @@ class ScenarioRepository {
 
   ScenarioRepository(this._source);
 
-  FE<List<ScenarioModel>> fetchScenarios() => fe(_source.fetchScenarios());
+  FE<List<ScenarioModel>> fetchScenarios(int page) => fe(_source.fetchScenarios(page));
 }
