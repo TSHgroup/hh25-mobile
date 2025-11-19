@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:either_dart/either.dart';
 import 'package:odpalgadke/common/app/odpalgadke.dart';
 import 'package:odpalgadke/features/scenario/data/models/scenario_model.dart';
 
@@ -31,16 +32,16 @@ class ScenarioDataSource {
     return [];
   }
 
-  Future<List<ScenarioModel>> fetchScenarios(int page) async {
+  Future<Either<Map<String, dynamic>, Map<String, dynamic>>> fetchScenarios(
+    int page,
+  ) async {
     Response response = await _dio.get(
       '${centralUrl}scenario?page=$page&limit=10',
     );
     if (response.statusCode == 200) {
-      return (response.data as List<dynamic>)
-          .map((dynamic) => ScenarioModel.fromJson(dynamic))
-          .toList();
+      return Right(response.data);
     }
 
-    return [];
+    return Left(response.data);
   }
 }

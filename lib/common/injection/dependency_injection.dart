@@ -3,10 +3,8 @@ import 'package:get_it/get_it.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:odpalgadke/features/auth/data/auth_secure_storage.dart';
 import 'package:odpalgadke/features/auth/data/data_sources/auth_data_source.dart';
-import 'package:odpalgadke/features/auth/data/repostiories/auth_repository.dart';
 import 'package:odpalgadke/features/auth/presentation/blocs/current_user_bloc.dart';
 import 'package:odpalgadke/features/scenario/data/data_sources/scenario_data_source.dart';
-import 'package:odpalgadke/features/scenario/data/repositories/scenario_repository.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart' show PrettyDioLogger;
 
 final get = GetIt.instance;
@@ -67,9 +65,7 @@ Future<void> initializeDependencies() async {
   get.registerLazySingleton(() => CurrentUserBloc());
   get.registerLazySingleton(() => AuthSecureStorage());
   get.registerLazySingleton(() => AuthDataSource(get()));
-  get.registerLazySingleton(() => AuthRepository(get()));
 
   // Scenario
   get.registerLazySingleton(() => ScenarioDataSource(get()));
-  get.registerLazySingleton(() => ScenarioRepository(get()));
 }

@@ -16,7 +16,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _usernameKey = const TextFieldKey(#username);
-  final _languageKey = const TextFieldKey(#language);
 
   NavigationItem buildButton(String label, IconData icon) {
     return NavigationItem(
