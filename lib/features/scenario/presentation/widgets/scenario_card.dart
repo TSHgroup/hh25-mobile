@@ -1,4 +1,7 @@
 import 'package:go_router/go_router.dart';
+import 'package:odpalgadke/common/injection/dependency_injection.dart';
+import 'package:odpalgadke/features/persona/data/data_sources/persona_data_source.dart';
+import 'package:odpalgadke/features/persona/presentation/widgets/persona_card_widget.dart';
 import 'package:odpalgadke/features/scenario/data/models/scenario_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
@@ -39,6 +42,18 @@ class ScenarioCard extends StatelessWidget {
               Text(scenario.persona).semiBold,
             ],
           ),
+
+          FutureBuilder(
+            future: get<PersonaDataSource>().fetchPersona(scenario.persona),
+            builder: (context, snapshot) {
+              if (snapshot.data == null) {
+                return CircularProgressIndicator();
+              }
+
+              return PersonaCardWidget(persona: snapshot.data!);
+            },
+          ),
+
           SizedBox(height: 1.h),
 
           Wrap(

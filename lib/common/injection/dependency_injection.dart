@@ -4,6 +4,7 @@ import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:odpalgadke/features/auth/data/auth_secure_storage.dart';
 import 'package:odpalgadke/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:odpalgadke/features/auth/presentation/blocs/current_user_bloc.dart';
+import 'package:odpalgadke/features/persona/data/data_sources/persona_data_source.dart';
 import 'package:odpalgadke/features/scenario/data/data_sources/scenario_data_source.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart' show PrettyDioLogger;
 
@@ -68,4 +69,7 @@ Future<void> initializeDependencies() async {
 
   // Scenario
   get.registerLazySingleton(() => ScenarioDataSource(get()));
+
+  // Persona
+  get.registerLazySingleton(() => PersonaDataSource(get()));
 }
