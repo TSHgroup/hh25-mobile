@@ -17,7 +17,6 @@ abstract class PersonaModel with _$PersonaModel {
     required int maxResponseTokens,
     required bool public,
     required String createdBy,
-    @JsonKey(name: '__v') required int v,
   }) = _PersonaModel;
 
   factory PersonaModel.fromJson(Map<String, dynamic> json) =>
@@ -27,9 +26,9 @@ abstract class PersonaModel with _$PersonaModel {
 @freezed
 abstract class PersonaEmotionModelModel with _$PersonaEmotionModelModel {
   factory PersonaEmotionModelModel({
-    required String baseline,
-    required bool adapt,
-    @JsonKey(name: '_id') required String id,
+    required String? baseline,
+    required bool? adapt,
+    @JsonKey(name: '_id') required String? id,
   }) = _PersonaEmotionModelModel;
 
   factory PersonaEmotionModelModel.fromJson(Map<String, dynamic> json) =>

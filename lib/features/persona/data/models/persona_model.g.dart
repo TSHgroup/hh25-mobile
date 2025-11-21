@@ -20,7 +20,6 @@ _PersonaModel _$PersonaModelFromJson(Map<String, dynamic> json) =>
       maxResponseTokens: (json['maxResponseTokens'] as num).toInt(),
       public: json['public'] as bool,
       createdBy: json['createdBy'] as String,
-      v: (json['__v'] as num).toInt(),
     );
 
 Map<String, dynamic> _$PersonaModelToJson(_PersonaModel instance) =>
@@ -35,15 +34,14 @@ Map<String, dynamic> _$PersonaModelToJson(_PersonaModel instance) =>
       'maxResponseTokens': instance.maxResponseTokens,
       'public': instance.public,
       'createdBy': instance.createdBy,
-      '__v': instance.v,
     };
 
 _PersonaEmotionModelModel _$PersonaEmotionModelModelFromJson(
   Map<String, dynamic> json,
 ) => _PersonaEmotionModelModel(
-  baseline: json['baseline'] as String,
-  adapt: json['adapt'] as bool,
-  id: json['_id'] as String,
+  baseline: json['baseline'] as String?,
+  adapt: json['adapt'] as bool?,
+  id: json['_id'] as String?,
 );
 
 Map<String, dynamic> _$PersonaEmotionModelModelToJson(

@@ -22,10 +22,12 @@ class PersonaDataSource {
   }
 
   Future<PersonaModel?> fetchPersona(String id) async {
-    Response response = await _dio.get('${centralUrl}persona/$id');
-    if (response.statusCode == 200) {
-      return PersonaModel.fromJson(response.data);
-    }
+    try {
+      Response response = await _dio.get('${centralUrl}persona/$id');
+      if (response.statusCode == 200) {
+        return PersonaModel.fromJson(response.data);
+      }
+    } catch (_) {}
 
     return null;
   }

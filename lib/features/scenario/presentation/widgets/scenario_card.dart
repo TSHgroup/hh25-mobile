@@ -35,14 +35,6 @@ class ScenarioCard extends StatelessWidget {
             child: Divider(),
           ),
 
-          Row(
-            spacing: 10.sp,
-            children: [
-              Icon(BootstrapIcons.personBoundingBox),
-              Text(scenario.persona).semiBold,
-            ],
-          ),
-
           FutureBuilder(
             future: get<PersonaDataSource>().fetchPersona(scenario.persona),
             builder: (context, snapshot) {

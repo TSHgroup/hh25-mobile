@@ -1,9 +1,9 @@
 import 'package:odpalgadke/common/injection/dependency_injection.dart';
 import 'package:odpalgadke/features/home/handle_page_change.dart';
+import 'package:odpalgadke/features/home/presentation/widgets/home_app_bar_widget.dart';
 import 'package:odpalgadke/features/persona/data/data_sources/persona_data_source.dart';
 import 'package:odpalgadke/features/persona/data/models/persona_model.dart';
 import 'package:odpalgadke/features/persona/presentation/widgets/persona_card_widget.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class LibraryPage extends StatelessWidget {
@@ -38,29 +38,7 @@ class LibraryPage extends StatelessWidget {
         ),
       ],
       showLoadingSparks: true,
-      headers: [
-        AppBar(
-          title: const Text('OdpalGadkę'),
-          subtitle: const Text('Witaj, ThisKarolGajda'),
-          leading: [
-            Avatar(
-              backgroundColor: Colors.red,
-              initials: Avatar.getInitials('sunarya-thito'),
-              provider: const NetworkImage(
-                'https://avatars.githubusercontent.com/u/64018564?v=4',
-              ),
-              badge: AvatarBadge(size: 14.sp, color: Colors.green),
-            ),
-          ],
-          trailing: [
-            OutlineButton(
-              onPressed: () {},
-              density: ButtonDensity.icon,
-              child: const Icon(Icons.search),
-            ),
-          ],
-        ),
-      ],
+      headers: [HomeAppBarWidget()],
       child: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

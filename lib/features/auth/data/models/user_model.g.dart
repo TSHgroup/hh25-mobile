@@ -49,7 +49,7 @@ _UserProfileModel _$UserProfileModelFromJson(Map<String, dynamic> json) =>
       id: json['_id'] as String,
       displayName: json['displayName'] as String,
       language: json['language'] as String,
-      bio: json['bio'] as String?,
+      bio: json['bio'] as String? ?? null,
       goals: (json['goals'] as List<dynamic>).map((e) => e as String).toList(),
       createdAt: json['createdAt'] as String,
       updatedAt: json['updatedAt'] as String,

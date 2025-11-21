@@ -24,10 +24,11 @@ _ScenarioModel _$ScenarioModelFromJson(Map<String, dynamic> json) =>
           .toList(),
       persona: json['persona'] as String,
       ai: ScenarioAiModel.fromJson(json['ai'] as Map<String, dynamic>),
-      rounds: json['rounds'] as List<dynamic>,
+      rounds: (json['rounds'] as List<dynamic>)
+          .map((e) => ScenarioRoundModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
       id: json['_id'] as String,
       createdAt: json['createdAt'] as String,
-      v: (json['__v'] as num).toInt(),
     );
 
 Map<String, dynamic> _$ScenarioModelToJson(_ScenarioModel instance) =>
@@ -47,7 +48,36 @@ Map<String, dynamic> _$ScenarioModelToJson(_ScenarioModel instance) =>
       'rounds': instance.rounds,
       '_id': instance.id,
       'createdAt': instance.createdAt,
-      '__v': instance.v,
+    };
+
+_ScenarioRoundModel _$ScenarioRoundModelFromJson(Map<String, dynamic> json) =>
+    _ScenarioRoundModel(
+      tips:
+          (json['tips'] as List<dynamic>?)?.map((e) => e as String).toList() ??
+          const [],
+      keywordsRequired:
+          (json['keywordsRequired'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      keywordsBanned:
+          (json['keywordsBanned'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
+      id: json['_id'] as String,
+      prompt: json['prompt'] as String,
+      emotion: json['emotion'] as String?,
+    );
+
+Map<String, dynamic> _$ScenarioRoundModelToJson(_ScenarioRoundModel instance) =>
+    <String, dynamic>{
+      'tips': instance.tips,
+      'keywordsRequired': instance.keywordsRequired,
+      'keywordsBanned': instance.keywordsBanned,
+      '_id': instance.id,
+      'prompt': instance.prompt,
+      'emotion': instance.emotion,
     };
 
 _ScenarioAiModel _$ScenarioAiModelFromJson(Map<String, dynamic> json) =>

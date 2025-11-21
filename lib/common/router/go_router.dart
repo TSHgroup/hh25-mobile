@@ -10,6 +10,7 @@ import 'package:odpalgadke/features/home/presentation/pages/home_page.dart';
 import 'package:odpalgadke/features/library/presentation/pages/library_page.dart';
 import 'package:odpalgadke/features/profile/presentation/pages/profile_page.dart';
 import 'package:odpalgadke/features/scenario/presentation/pages/scenario_page.dart';
+import 'package:odpalgadke/features/scenario/presentation/pages/scenario_progress_page.dart';
 
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -46,6 +47,10 @@ final router = GoRouter(
     GoRoute(
       path: '/scenario',
       builder: (context, state) => ScenarioPage(scenario: extra(state)),
+    ),
+    GoRoute(
+      path: '/scenario/progress',
+      builder: (context, state) => ScenarioProgressPage(scenario: extra(state)),
     ),
   ],
 );

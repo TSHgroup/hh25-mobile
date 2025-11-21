@@ -52,7 +52,7 @@ class ScenarioPage extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     PrimaryButton(
-                      onPressed: () {},
+                      onPressed: () => context.push('/scenario/progress', extra: scenario),
                       child: Row(
                         spacing: 12.sp,
                         children: [

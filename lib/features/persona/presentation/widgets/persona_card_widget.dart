@@ -15,59 +15,21 @@ class PersonaCardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(persona.name).h1,
+            Text(persona.name).xLarge.bold,
+            const SizedBox(height: 6),
 
-            const SizedBox(height: 8),
-
-            // Role
-            Text("Role", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(persona.role),
+            Text("Role").bold.small,
+            Text(persona.role).small,
 
             const SizedBox(height: 12),
 
-            // Personality
-            Text("Personality", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(persona.personality),
+            Text("Personality").bold.small,
+            Text(persona.personality).small,
 
             const SizedBox(height: 12),
 
-            // Voice
-            Text("Voice", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(persona.voice),
-
-            const SizedBox(height: 12),
-
-            // Informations
-            Text("Informations", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(persona.informations),
-
-            const SizedBox(height: 12),
-
-            // Emotion Model
-            Text("Emotion Model", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text("Baseline: ${persona.emotionModel.baseline}"),
-            Text("Adaptive: ${persona.emotionModel.adapt ? 'Yes' : 'No'}"),
-
-            const SizedBox(height: 12),
-
-            // Max tokens
-            Text(
-              "Max Response Tokens",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(persona.maxResponseTokens.toString()),
-
-            const SizedBox(height: 12),
-
-            // Public?
-            Text("Visibility", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(persona.public ? "Public" : "Private"),
-
-            const SizedBox(height: 12),
-
-            // Created by
-            Text("Created by", style: TextStyle(fontWeight: FontWeight.bold)),
-            Text(persona.createdBy),
+            Text("Voice").bold.small,
+            Text(persona.voice).small,
           ],
         ),
       ),

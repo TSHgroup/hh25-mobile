@@ -18,14 +18,27 @@ abstract class ScenarioModel with _$ScenarioModel {
     required List<String> objectives,
     required String persona,
     required ScenarioAiModel ai,
-    required List<dynamic> rounds,
+    required List<ScenarioRoundModel> rounds,
     @JsonKey(name: '_id') required String id,
     required String createdAt,
-    @JsonKey(name: '__v') required int v,
   }) = _ScenarioModel;
 
   factory ScenarioModel.fromJson(Map<String, dynamic> json) =>
       _$ScenarioModelFromJson(json);
+}
+
+@freezed
+abstract class ScenarioRoundModel with _$ScenarioRoundModel {
+  factory ScenarioRoundModel({
+    @Default([]) List<String> tips,
+    @Default([]) List<String> keywordsRequired,
+    @Default([]) List<String> keywordsBanned,
+    @JsonKey(name: '_id') required String id,
+    required String prompt,
+    required String? emotion,
+  }) = _ScenarioRoundModel;
+
+  factory ScenarioRoundModel.fromJson(Map<String, dynamic> json) => _$ScenarioRoundModelFromJson(json);
 }
 
 @freezed
