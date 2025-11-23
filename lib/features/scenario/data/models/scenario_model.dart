@@ -19,6 +19,7 @@ abstract class ScenarioModel with _$ScenarioModel {
     required String persona,
     required ScenarioAiModel ai,
     required List<ScenarioRoundModel> rounds,
+    required String? openingPrompt,
     @JsonKey(name: '_id') required String id,
     required String createdAt,
   }) = _ScenarioModel;

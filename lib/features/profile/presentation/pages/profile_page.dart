@@ -51,7 +51,6 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Profile').p,
             SecondaryButton(
               child: const Text('Wyloguj się'),
               onPressed: () async {

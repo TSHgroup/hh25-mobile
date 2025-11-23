@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:just_audio/just_audio.dart';
+import 'package:odpalgadke/features/scenario/data/models/scenario_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:web_socket_channel/status.dart' as ws_status;
 import 'package:web_socket_channel/web_socket_channel.dart';
@@ -12,6 +13,7 @@ typedef MessageCallback = void Function(String content, String type);
 class ScenarioProgressWebSocket {
   WebSocketChannel? _channel;
   bool isConnected = false;
+  ScenarioModel? scenarioModel;
 
   final MessageCallback onMessage;
 
@@ -19,142 +21,89 @@ class ScenarioProgressWebSocket {
 
   ScenarioProgressWebSocket({required this.onMessage});
 
-  /// Connect to WebSocket server
   void connect({
     required String token,
-    required String scenarioId,
+    required ScenarioModel scenario,
     required String roundId,
   }) {
-    print("[DEBUG] connect() called");
-    print("[DEBUG] token: $token");
-    print("[DEBUG] scenarioId: $scenarioId");
-    print("[DEBUG] roundId: $roundId");
-
-    if (token.isEmpty || scenarioId.isEmpty || roundId.isEmpty) {
-      onMessage("Token, Scenario ID and Round ID are required", "system");
+    scenarioModel = scenario;
+    if (token.isEmpty || scenario.id.isEmpty || roundId.isEmpty) {
+      onMessage("Token, id scenariuszu i id rundu są wymagane!", "system");
       return;
     }
 
     final url = "ws://odpalgadke.q1000q.cc/api/v1/ai/chat?token=$token";
-    print("[DEBUG] Connecting to WS: $url");
 
     _channel = WebSocketChannel.connect(Uri.parse(url));
 
     _channel!.stream.listen(_onData, onDone: _onDone, onError: _onError);
 
     isConnected = true;
-    onMessage("Connected to server", "system");
+    // onMessage("Podłączono do serwera", "system");
 
-    print("[DEBUG] Sending START message...");
-
-    /// Send 'start'
     _channel!.sink.add(
       jsonEncode({
         "type": "start",
-        "scenarioId": scenarioId,
+        "scenarioId": scenario.id,
         "roundId": roundId,
       }),
     );
   }
 
-  /// Handle WebSocket incoming messages
   void _onData(dynamic event) {
-    print("[DEBUG] Incoming WS event: $event");
-
     final data = jsonDecode(event);
-    print("[DEBUG] Decoded JSON: $data");
-
     switch (data['type']) {
       case 'started':
-        print(
-          "[DEBUG] Chat started, conversationId: ${data['conversationId']}",
-        );
         onMessage(
-          "Chat started - Conversation ID: ${data['conversationId']}",
+          "Start konwersacji - Id konwersacji: ${data['conversationId']}",
           "system",
         );
+        if (scenarioModel != null) {
+          onMessage("${scenarioModel?.openingPrompt}", "ai");
+        }
         break;
 
       case 'transcription':
-        print("[DEBUG] Transcription received: ${data['content']}");
-        onMessage("[Transcribed]: ${data['content']}", "user");
+        onMessage("[Transkrypcja]: ${data['content']}", "user");
         break;
 
       case 'response':
-        print("[DEBUG] Response received");
-        print("[DEBUG] Text content: ${data['content']}");
-        print("[DEBUG] Audio present: ${data['audio'] != null}");
-
         onMessage(data['content'], "ai");
 
         if (data['audio'] != null) {
-          print("[DEBUG] Calling _playAudioBase64()...");
           _playAudioBase64(data['audio']);
         }
         break;
 
       case 'error':
-        print("[DEBUG] Error received: ${data['content']}");
-        onMessage("Error: ${data['content']}", "system");
+        onMessage("Błąd: ${data['content']}", "system");
         break;
 
       case 'ended':
-        print("[DEBUG] Chat ended");
-        onMessage("Chat ended", "system");
+        onMessage("Czat się zakończył", "system");
         break;
-
-      default:
-        print("[DEBUG] Unknown WS message type: ${data['type']}");
     }
   }
 
   /// Play base64 PCM audio (24kHz, mono, 16-bit)
   Future<void> _playAudioBase64(String base64Audio) async {
-    print("[DEBUG] _playAudioBase64 called");
-    print("[DEBUG] Base64 length: ${base64Audio.length}");
-
     try {
       Uint8List pcm = base64Decode(base64Audio);
-      print("[DEBUG] PCM bytes decoded: ${pcm.length}");
-
-      // Dodaj WAV header
       Uint8List wavBytes = _wrapPcmToWav(pcm, sampleRate: 24000);
-      print("[DEBUG] WAV bytes length: ${wavBytes.length}");
-
-      // Zapisz plik WAV do pamięci
       final dir = await getTemporaryDirectory();
-      print("[DEBUG] Temp directory: ${dir.path}");
-
       final file = File('${dir.path}/tmp_audio.wav');
       await file.writeAsBytes(wavBytes);
-
-      print("[DEBUG] WAV file written to: ${file.path}");
-      print("[DEBUG] WAV file size: ${await file.length()} bytes");
-
       final uri = Uri.file(file.path);
-      print("[DEBUG] WAV file URI: $uri");
-
       await _audioPlayer.setAudioSource(AudioSource.uri(uri));
-      print("[DEBUG] Audio source set, starting playback...");
-
       await _audioPlayer.play();
-      print("[DEBUG] Playback started successfully");
-
-      onMessage("🔊 Playing audio response", "system");
-    } catch (e, stack) {
-      print("[DEBUG] ERROR in _playAudioBase64: $e");
-      print("[DEBUG] STACK TRACE:\n$stack");
-
-      onMessage("Audio playback failed: $e", "system");
+      onMessage("🔊 Odtwarzanie dźwięku", "system");
+    } catch (e) {
+      onMessage("Odtwarzanie dźwięku zakończone błędem: $e", "system");
     }
   }
 
   /// Wrap raw PCM data to WAV header for Flutter audio
   Uint8List _wrapPcmToWav(Uint8List pcm, {required int sampleRate}) {
-    print("[DEBUG] _wrapPcmToWav()");
-    print("[DEBUG] PCM length: ${pcm.length}");
-    print("[DEBUG] sampleRate: $sampleRate");
-
     int byteRate = sampleRate * 2 * 1;
 
     final header = BytesBuilder();
@@ -176,8 +125,6 @@ class ScenarioProgressWebSocket {
     header.add(_int32(pcm.length));
     header.add(pcm);
 
-    print("[DEBUG] WAV header + data generated");
-
     return header.toBytes();
   }
 
@@ -195,12 +142,8 @@ class ScenarioProgressWebSocket {
       ..[3] = (value >> 24) & 0xff;
   }
 
-  /// Send a normal text message
   void sendMessage(String text) {
-    print("[DEBUG] sendMessage: $text");
-
     if (!isConnected) {
-      print("[DEBUG] Not connected — cannot send");
       return;
     }
 
@@ -208,14 +151,8 @@ class ScenarioProgressWebSocket {
     onMessage(text, "user");
   }
 
-  /// Send audio (base64 string)
   void sendAudio(String base64Audio, String mimeType) {
-    print("[DEBUG] sendAudio()");
-    print("[DEBUG] base64 length: ${base64Audio.length}");
-    print("[DEBUG] mimeType: $mimeType");
-
     if (!isConnected) {
-      print("[DEBUG] Not connected — cannot send audio");
       return;
     }
 
@@ -230,25 +167,19 @@ class ScenarioProgressWebSocket {
     onMessage("Sending audio...", "user");
   }
 
-  /// Close WebSocket
   void disconnect() {
-    print("[DEBUG] disconnect() called");
-
     if (isConnected) {
-      print("[DEBUG] Sending END message and closing WS...");
       _channel?.sink.add(jsonEncode({"type": "end"}));
       _channel?.sink.close(ws_status.normalClosure);
     }
   }
 
   void _onDone() {
-    print("[DEBUG] WebSocket closed (onDone)");
     isConnected = false;
-    onMessage("Disconnected from server", "system");
+    // onMessage("Rozłączono z serwerem", "system");
   }
 
-  void _onError(error) {
-    print("[DEBUG] WebSocket ERROR: $error");
-    onMessage("WebSocket error: $error", "system");
+  void _onError(dynamic error) {
+    onMessage("Błąd webscoketa: $error", "system");
   }
 }

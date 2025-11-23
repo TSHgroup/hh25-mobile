@@ -27,6 +27,7 @@ _ScenarioModel _$ScenarioModelFromJson(Map<String, dynamic> json) =>
       rounds: (json['rounds'] as List<dynamic>)
           .map((e) => ScenarioRoundModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      openingPrompt: json['openingPrompt'] as String?,
       id: json['_id'] as String,
       createdAt: json['createdAt'] as String,
     );
@@ -46,6 +47,7 @@ Map<String, dynamic> _$ScenarioModelToJson(_ScenarioModel instance) =>
       'persona': instance.persona,
       'ai': instance.ai,
       'rounds': instance.rounds,
+      'openingPrompt': instance.openingPrompt,
       '_id': instance.id,
       'createdAt': instance.createdAt,
     };

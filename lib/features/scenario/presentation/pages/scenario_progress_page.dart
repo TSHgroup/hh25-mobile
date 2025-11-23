@@ -1,8 +1,15 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:go_router/go_router.dart';
 import 'package:odpalgadke/common/injection/dependency_injection.dart';
 import 'package:odpalgadke/features/auth/data/auth_secure_storage.dart';
 import 'package:odpalgadke/features/scenario/data/models/scenario_model.dart';
 import 'package:odpalgadke/features/scenario/presentation/scenario_progress_web_socket.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:record/record.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class ScenarioProgressPage extends StatefulWidget {
   final ScenarioModel scenario;
@@ -17,10 +24,44 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
   late ScenarioProgressWebSocket ws;
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  List<Map<String, String>> _messages = [];
 
+  final List<Map<String, String>> _messages = [];
   String token = "";
   bool connected = false;
+
+  final AudioRecorder _recorder = AudioRecorder();
+  bool _isRecording = false;
+
+  Future<void> _startRecording() async {
+    if (await _recorder.hasPermission()) {
+      final dir = await getTemporaryDirectory();
+      final path = '${dir.path}/recorded_audio.m4a';
+
+      await _recorder.start(
+        const RecordConfig(
+          encoder: AudioEncoder.aacLc,
+          bitRate: 128000,
+          sampleRate: 24000,
+        ),
+        path: path,
+      );
+
+      setState(() => _isRecording = true);
+    }
+  }
+
+  Future<void> _stopRecording() async {
+    final path = await _recorder.stop();
+    setState(() => _isRecording = false);
+
+    if (path == null) return;
+
+    final file = File(path);
+    final bytes = await file.readAsBytes();
+    final base64Audio = base64Encode(bytes);
+
+    ws.sendAudio(base64Audio, "audio/m4a");
+  }
 
   @override
   void initState() {
@@ -36,7 +77,7 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
 
     ws.connect(
       token: token,
-      scenarioId: widget.scenario.id,
+      scenario: widget.scenario,
       roundId: widget.scenario.rounds[0].id,
     );
 
@@ -50,7 +91,6 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
       _messages.add({"content": content, "type": type});
     });
 
-    // Auto-scroll to bottom
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         _scrollController.animateTo(
@@ -88,92 +128,112 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
   Widget _buildMessageTile(Map<String, String> msg) {
     final isUser = msg["type"] == "user";
     final isAI = msg["type"] == "ai";
-    final isSystem = msg["type"] == "system";
 
     Color bgColor;
     Alignment align;
     TextStyle textStyle;
 
     if (isUser) {
-      bgColor = Colors.blue;
+      bgColor = Colors.blue.shade600;
       align = Alignment.centerRight;
       textStyle = const TextStyle(color: Colors.white);
     } else if (isAI) {
-      bgColor = Colors.green;
+      bgColor = Colors.green.shade600;
       align = Alignment.centerLeft;
       textStyle = const TextStyle(color: Colors.white);
     } else {
-      bgColor = Colors.yellow;
+      bgColor = Colors.amber.shade200;
       align = Alignment.center;
-      textStyle = const TextStyle(color: Colors.black, fontStyle: FontStyle.italic);
+      textStyle = TextStyle(color: Colors.black, fontStyle: FontStyle.italic);
     }
 
-    return Container(
+    return Align(
       alignment: align,
-      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(8),
-        ),
+      child: Card(
+        borderColor: bgColor,
+        fillColor: bgColor,
+        filled: true,
         child: Text(msg["content"] ?? "", style: textStyle),
-      ),
+      ).withPadding(vertical: 0.25.h, horizontal: 2.w),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Scenario Progress Chat"),
-        actions: [
-          IconButton(
-            icon: Icon(connected ? Icons.link_off : Icons.link),
-            onPressed: connected ? _disconnect : _initTokenAndConnect,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.all(8),
-              color: Colors.grey.shade200,
-              child: ListView.builder(
-                controller: _scrollController,
-                itemCount: _messages.length,
-                itemBuilder: (context, index) {
-                  return _buildMessageTile(_messages[index]);
-                },
-              ),
+      headers: [
+        AppBar(
+          title: const Text("Konwersacja"),
+          leading: [
+            OutlineButton(
+              density: ButtonDensity.icon,
+              onPressed: () => context.pop(),
+              child: Icon(Icons.arrow_back_ios_new),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            color: Colors.white,
+          ],
+          trailing: [
+            PrimaryButton(
+              onPressed: connected ? _disconnect : _initTokenAndConnect,
+              child: Icon(connected ? Icons.link_off : Icons.link),
+            ),
+          ],
+        ),
+      ],
+      footers: [
+        SafeArea(
+          top: false,
+          child: Container(
+            padding: const EdgeInsets.all(12),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: _messageController,
-                    decoration: const InputDecoration(
-                      hintText: "Type a message...",
-                      border: OutlineInputBorder(),
-                    ),
                     onSubmitted: (_) => _sendMessage(),
                   ),
                 ),
                 const SizedBox(width: 8),
-                IconButton(
-                  icon: const Icon(Icons.send),
-                  color: Colors.blue,
+
+                // 🎤 Voice button
+                PrimaryButton(
+                  onPressed: () async {
+                    if (_isRecording) {
+                      await _stopRecording();
+                    } else {
+                      await _startRecording();
+                    }
+                  },
+                  child: Icon(_isRecording ? Icons.stop : Icons.mic, size: 22),
+                ),
+
+                const SizedBox(width: 8),
+
+                PrimaryButton(
                   onPressed: _sendMessage,
+                  child: const Icon(Icons.send, size: 20),
                 ),
               ],
             ),
           ),
-        ],
+        ),
+      ],
+      child: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                width: 72.h,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  controller: _scrollController,
+                  itemCount: _messages.length,
+                  itemBuilder: (context, index) =>
+                      _buildMessageTile(_messages[index]),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
