@@ -63,9 +63,12 @@ class HomePage extends StatelessWidget {
               },
             ),
 
-            Text(
-              'Twoje scenariusze',
-            ).h4.withAlign(AlignmentGeometry.centerLeft).withPadding(left: 4.w),
+            Align(
+              alignment: AlignmentGeometry.centerLeft,
+              child: Text(
+                'Twoje scenariusze',
+              ).h4.withPadding(left: 4.w),
+            ),
             FutureBuilder(
               future: get<ScenarioDataSource>().fetchOwnScenarios(),
               builder: (context, snapshot) {
