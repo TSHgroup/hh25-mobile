@@ -47,7 +47,7 @@ Map<String, dynamic> _$UserNameModelToJson(_UserNameModel instance) =>
 _UserProfileModel _$UserProfileModelFromJson(Map<String, dynamic> json) =>
     _UserProfileModel(
       id: json['_id'] as String,
-      displayName: json['displayName'] as String,
+      displayName: json['displayName'] as String? ?? "",
       language: json['language'] as String,
       bio: json['bio'] as String?,
       goals: (json['goals'] as List<dynamic>).map((e) => e as String).toList(),

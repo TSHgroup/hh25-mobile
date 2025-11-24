@@ -1076,11 +1076,11 @@ return $default(_that.id,_that.displayName,_that.language,_that.bio,_that.goals,
 @JsonSerializable()
 
 class _UserProfileModel implements UserProfileModel {
-   _UserProfileModel({@JsonKey(name: '_id') required this.id, required this.displayName, required this.language, this.bio = null, required final  List<String> goals, required this.createdAt, required this.updatedAt}): _goals = goals;
+   _UserProfileModel({@JsonKey(name: '_id') required this.id, this.displayName = "", required this.language, this.bio = null, required final  List<String> goals, required this.createdAt, required this.updatedAt}): _goals = goals;
   factory _UserProfileModel.fromJson(Map<String, dynamic> json) => _$UserProfileModelFromJson(json);
 
 @override@JsonKey(name: '_id') final  String id;
-@override final  String displayName;
+@override@JsonKey() final  String displayName;
 @override final  String language;
 @override@JsonKey() final  String? bio;
  final  List<String> _goals;

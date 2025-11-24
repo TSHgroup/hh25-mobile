@@ -43,7 +43,7 @@ abstract class UserNameModel with _$UserNameModel {
 abstract class UserProfileModel with _$UserProfileModel {
   factory UserProfileModel({
     @JsonKey(name: '_id') required String id,
-    required String displayName,
+    @Default("") String displayName,
     required String language,
     @Default(null) String? bio,
     required List<String> goals,

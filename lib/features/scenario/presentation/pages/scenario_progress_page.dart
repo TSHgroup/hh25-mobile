@@ -125,6 +125,43 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
     super.dispose();
   }
 
+  Widget _buildFormattedText(String input, TextStyle baseStyle) {
+    final RegExp exp = RegExp(r'\*(.*?)\*');
+    final List<InlineSpan> spans = [];
+
+    int currentIndex = 0;
+
+    baseStyle = baseStyle.copyWith(fontSize: 17.sp);
+
+    for (final match in exp.allMatches(input)) {
+      if (match.start > currentIndex) {
+        spans.add(
+          TextSpan(
+            text: input.substring(currentIndex, match.start),
+            style: baseStyle,
+          ),
+        );
+      }
+
+      spans.add(
+        TextSpan(
+          text: match.group(1),
+          style: baseStyle.copyWith(fontWeight: FontWeight.bold),
+        ),
+      );
+
+      currentIndex = match.end;
+    }
+
+    if (currentIndex < input.length) {
+      spans.add(
+        TextSpan(text: input.substring(currentIndex), style: baseStyle),
+      );
+    }
+
+    return RichText(text: TextSpan(children: spans));
+  }
+
   Widget _buildMessageTile(Map<String, String> msg) {
     final isUser = msg["type"] == "user";
     final isAI = msg["type"] == "ai";
@@ -153,7 +190,7 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
         borderColor: bgColor,
         fillColor: bgColor,
         filled: true,
-        child: Text(msg["content"] ?? "", style: textStyle),
+        child: _buildFormattedText(msg["content"] ?? "", textStyle),
       ).withPadding(vertical: 0.25.h, horizontal: 2.w),
     );
   }
@@ -163,7 +200,7 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
     return Scaffold(
       headers: [
         AppBar(
-          title: const Text("Konwersacja"),
+          title: Text("Konwersacja"),
           leading: [
             OutlineButton(
               density: ButtonDensity.icon,
@@ -194,7 +231,6 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
                 ),
                 const SizedBox(width: 8),
 
-                // 🎤 Voice button
                 PrimaryButton(
                   onPressed: () async {
                     if (_isRecording) {
@@ -218,20 +254,15 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
         ),
       ],
       child: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                width: 72.h,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  controller: _scrollController,
-                  itemCount: _messages.length,
-                  itemBuilder: (context, index) =>
-                      _buildMessageTile(_messages[index]),
-                ),
-              ),
-            ],
+        child: Center(
+          child: SizedBox(
+            width: 72.h,
+            child: ListView.builder(
+              controller: _scrollController,
+              itemCount: _messages.length,
+              itemBuilder: (context, index) =>
+                  _buildMessageTile(_messages[index]),
+            ),
           ),
         ),
       ),

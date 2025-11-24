@@ -44,4 +44,17 @@ class ScenarioDataSource {
 
     return Left(response.data);
   }
+
+  Future<Either<Map<String, dynamic>, Map<String, dynamic>>> fetchConversations(
+    int page,
+  ) async {
+    Response response = await _dio.get(
+      '${centralUrl}user/me/conversations?page=$page&limit=10',
+    );
+    if (response.statusCode == 200) {
+      return Right(response.data);
+    }
+
+    return Left(response.data);
+  }
 }

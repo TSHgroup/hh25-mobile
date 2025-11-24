@@ -1,8 +1,11 @@
 import 'package:odpalgadke/common/injection/dependency_injection.dart';
+import 'package:odpalgadke/features/analytics/data/data_sources/analytic_data_source.dart';
+import 'package:odpalgadke/features/analytics/presentation/pages/analytic_widget.dart';
 import 'package:odpalgadke/features/home/handle_page_change.dart';
 import 'package:odpalgadke/features/home/presentation/widgets/home_app_bar_widget.dart';
 import 'package:odpalgadke/features/scenario/data/data_sources/scenario_data_source.dart';
 import 'package:odpalgadke/features/scenario/presentation/widgets/scenario_card.dart';
+import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class HomePage extends StatelessWidget {
@@ -43,21 +46,28 @@ class HomePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             FutureBuilder(
-              future: get<ScenarioDataSource>().fetchOwnScenarios(),
+              future: get<AnalyticDataSource>().fetchAnalytics(),
               builder: (context, snapshot) {
                 if (snapshot.data == null) {
                   return CircularProgressIndicator();
                 }
 
-                return Column(
-                  children: snapshot.data!
-                      .map((scenario) => ScenarioCard(scenario: scenario))
-                      .toList(),
+                return snapshot.data!.fold(
+                  (exception) {
+                    return Text(exception.toString());
+                  },
+                  (analytic) {
+                    return AnalyticWidget(analytic: analytic);
+                  },
                 );
               },
             ),
+
+            Text(
+              'Twoje scenariusze',
+            ).h4.withAlign(AlignmentGeometry.centerLeft).withPadding(left: 4.w),
             FutureBuilder(
-              future: get<ScenarioDataSource>().fetchUserScenarios(1),
+              future: get<ScenarioDataSource>().fetchOwnScenarios(),
               builder: (context, snapshot) {
                 if (snapshot.data == null) {
                   return CircularProgressIndicator();

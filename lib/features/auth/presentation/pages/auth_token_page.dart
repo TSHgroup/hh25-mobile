@@ -19,6 +19,7 @@ class _AuthTokenPageState extends State<AuthTokenPage> {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) async {
       String? refreshToken = await get<AuthSecureStorage>().getRefreshToken();
+
       if (refreshToken == null) {
         if (mounted) {
           context.replace('/auth');

@@ -18,18 +18,24 @@ class PersonaCardWidget extends StatelessWidget {
             Text(persona.name).xLarge.bold,
             const SizedBox(height: 6),
 
-            Text("Role").bold.small,
-            Text(persona.role).small,
+            Text("Rola").bold.small,
+            Text(
+              persona.role,
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+            ).small,
 
             const SizedBox(height: 12),
 
-            Text("Personality").bold.small,
-            Text(persona.personality).small,
+            Text("Osobowość").bold.small,
+            OverflowMarquee(
+              child: Text(persona.personality, maxLines: 1).small,
+            ),
 
             const SizedBox(height: 12),
 
-            Text("Voice").bold.small,
-            Text(persona.voice).small,
+            Text("Głos").bold.small,
+            Text(persona.voice, maxLines: 2).small,
           ],
         ),
       ),

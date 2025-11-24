@@ -28,7 +28,7 @@ class ScenarioCard extends StatelessWidget {
           Text(scenario.subtitle).normal.light,
           SizedBox(height: 2.h),
 
-          Text(scenario.description).small.blockQuote,
+          Text(scenario.description, maxLines: 6).small.blockQuote,
 
           Padding(
             padding: EdgeInsetsGeometry.symmetric(vertical: 1.5.h),
@@ -48,24 +48,6 @@ class ScenarioCard extends StatelessWidget {
 
           SizedBox(height: 1.h),
 
-          Wrap(
-            spacing: 10.sp,
-            runSpacing: 8.sp,
-            children: [
-              // if (scenario.aiPersona.personality != null)
-              //   ...scenario.aiPersona.personality!.split(', ').map((
-              //       personality) =>
-              //       OutlineBadge(
-              //         child: Text(personality).normal,
-              //       ),),
-              // OutlineBadge(
-              //     child: Text('Styl: ${scenario.aiPersona.responseStyle}')
-              //         .normal),
-              // OutlineBadge(child: Text(
-              //     'Ton: ${scenario.aiPersona.emotionModel.baseline}').normal),
-            ],
-          ),
-
           Padding(
             padding: EdgeInsetsGeometry.symmetric(vertical: 1.5.h),
             child: Divider(),
@@ -77,7 +59,7 @@ class ScenarioCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               ...scenario.objectives.toList().map(
-                (objective) => Text(objective).xSmall.li,
+                    (objective) => Text(objective).xSmall.li,
               ),
             ],
           ),

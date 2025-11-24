@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:odpalgadke/features/analytics/data/data_sources/analytic_data_source.dart';
 import 'package:odpalgadke/features/auth/data/auth_secure_storage.dart';
 import 'package:odpalgadke/features/auth/data/data_sources/auth_data_source.dart';
 import 'package:odpalgadke/features/auth/presentation/blocs/current_user_bloc.dart';
@@ -72,4 +73,7 @@ Future<void> initializeDependencies() async {
 
   // Persona
   get.registerLazySingleton(() => PersonaDataSource(get()));
+
+  // Analytics
+  get.registerLazySingleton(() => AnalyticDataSource(get()));
 }

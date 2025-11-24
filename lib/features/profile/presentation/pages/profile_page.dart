@@ -1,10 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:odpalgadke/common/injection/dependency_injection.dart';
 import 'package:odpalgadke/features/auth/data/auth_secure_storage.dart';
-import 'package:odpalgadke/features/auth/presentation/blocs/current_user.dart';
 import 'package:odpalgadke/features/home/handle_page_change.dart';
 import 'package:odpalgadke/features/home/presentation/widgets/home_app_bar_widget.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shadcn_flutter/shadcn_flutter.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -15,7 +13,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  final _usernameKey = const TextFieldKey(#username);
 
   NavigationItem buildButton(String label, IconData icon) {
     return NavigationItem(
@@ -72,30 +69,30 @@ class _ProfilePageState extends State<ProfilePage> {
             //     ],
             //   ),
             // ),
-            SizedBox(
-              width: 92.w,
-              child: Form(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    FormField(
-                      key: _usernameKey,
-                      label: const Text('Username'),
-                      hint: const Text('This is your public display name'),
-                      validator: const LengthValidator(min: 4),
-                      showErrors: const {
-                        FormValidationMode.changed,
-                        FormValidationMode.submitted,
-                      },
-                      child: TextField(
-                        initialValue: currentUser!.profile.displayName,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // SizedBox(
+            //   width: 92.w,
+            //   child: Form(
+            //     child: Column(
+            //       mainAxisSize: MainAxisSize.min,
+            //       crossAxisAlignment: CrossAxisAlignment.end,
+            //       children: [
+            //         FormField(
+            //           key: _usernameKey,
+            //           label: const Text('Username'),
+            //           hint: const Text('This is your public display name'),
+            //           validator: const LengthValidator(min: 4),
+            //           showErrors: const {
+            //             FormValidationMode.changed,
+            //             FormValidationMode.submitted,
+            //           },
+            //           child: TextField(
+            //             initialValue: currentUser!.profile.displayName,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
