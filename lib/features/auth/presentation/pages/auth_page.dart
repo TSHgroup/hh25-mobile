@@ -1,3 +1,4 @@
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:odpalgadke/common/injection/dependency_injection.dart';
 import 'package:odpalgadke/features/auth/data/auth_secure_storage.dart';
@@ -36,7 +37,19 @@ class _AuthPageState extends State<AuthPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              FlutterLogo(size: 42.sp),
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                padding: EdgeInsets.all(18.sp),
+                child: SvgPicture.string(
+                  width: 22.sp,
+                  height: 22.sp,
+                  colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  '<svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>',
+                ),
+              ),
               SizedBox(height: 5.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

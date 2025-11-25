@@ -78,7 +78,7 @@ class ScenarioProgressWebSocket {
         break;
 
       case 'error':
-        onMessage("Błąd: ${data['content']}", "system");
+        onMessage("Błąd: ${data['content']} - spróbuj odświeżyć", "system");
         break;
 
       case 'ended':
