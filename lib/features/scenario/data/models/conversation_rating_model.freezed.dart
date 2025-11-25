@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ConversationRatingModel {
 
-@JsonKey(name: '_id') String get id; String get user; String get scenario; List<ConversationRatingRoundsModel> get rounds; ConversationRatingStatsModel get stats; int get length; String get createdAt; String get updatedAt;
+@JsonKey(name: '_id') String get id; String get user; String get scenario; List<ConversationRatingRoundsModel> get rounds; ConversationRatingStatsModel get stats; int? get length; String get createdAt; String get updatedAt;
 /// Create a copy of ConversationRatingModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ConversationRatingModelCopyWith<$Res>  {
   factory $ConversationRatingModelCopyWith(ConversationRatingModel value, $Res Function(ConversationRatingModel) _then) = _$ConversationRatingModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String user, String scenario, List<ConversationRatingRoundsModel> rounds, ConversationRatingStatsModel stats, int length, String createdAt, String updatedAt
+@JsonKey(name: '_id') String id, String user, String scenario, List<ConversationRatingRoundsModel> rounds, ConversationRatingStatsModel stats, int? length, String createdAt, String updatedAt
 });
 
 
@@ -65,15 +65,15 @@ class _$ConversationRatingModelCopyWithImpl<$Res>
 
 /// Create a copy of ConversationRatingModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? user = null,Object? scenario = null,Object? rounds = null,Object? stats = null,Object? length = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? user = null,Object? scenario = null,Object? rounds = null,Object? stats = null,Object? length = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
 as String,scenario: null == scenario ? _self.scenario : scenario // ignore: cast_nullable_to_non_nullable
 as String,rounds: null == rounds ? _self.rounds : rounds // ignore: cast_nullable_to_non_nullable
 as List<ConversationRatingRoundsModel>,stats: null == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
-as ConversationRatingStatsModel,length: null == length ? _self.length : length // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as ConversationRatingStatsModel,length: freezed == length ? _self.length : length // ignore: cast_nullable_to_non_nullable
+as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -169,7 +169,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String user,  String scenario,  List<ConversationRatingRoundsModel> rounds,  ConversationRatingStatsModel stats,  int length,  String createdAt,  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String user,  String scenario,  List<ConversationRatingRoundsModel> rounds,  ConversationRatingStatsModel stats,  int? length,  String createdAt,  String updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ConversationRatingModel() when $default != null:
 return $default(_that.id,_that.user,_that.scenario,_that.rounds,_that.stats,_that.length,_that.createdAt,_that.updatedAt);case _:
@@ -190,7 +190,7 @@ return $default(_that.id,_that.user,_that.scenario,_that.rounds,_that.stats,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String user,  String scenario,  List<ConversationRatingRoundsModel> rounds,  ConversationRatingStatsModel stats,  int length,  String createdAt,  String updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String id,  String user,  String scenario,  List<ConversationRatingRoundsModel> rounds,  ConversationRatingStatsModel stats,  int? length,  String createdAt,  String updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _ConversationRatingModel():
 return $default(_that.id,_that.user,_that.scenario,_that.rounds,_that.stats,_that.length,_that.createdAt,_that.updatedAt);case _:
@@ -210,7 +210,7 @@ return $default(_that.id,_that.user,_that.scenario,_that.rounds,_that.stats,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String id,  String user,  String scenario,  List<ConversationRatingRoundsModel> rounds,  ConversationRatingStatsModel stats,  int length,  String createdAt,  String updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String id,  String user,  String scenario,  List<ConversationRatingRoundsModel> rounds,  ConversationRatingStatsModel stats,  int? length,  String createdAt,  String updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ConversationRatingModel() when $default != null:
 return $default(_that.id,_that.user,_that.scenario,_that.rounds,_that.stats,_that.length,_that.createdAt,_that.updatedAt);case _:
@@ -239,7 +239,7 @@ class _ConversationRatingModel implements ConversationRatingModel {
 }
 
 @override final  ConversationRatingStatsModel stats;
-@override final  int length;
+@override final  int? length;
 @override final  String createdAt;
 @override final  String updatedAt;
 
@@ -276,7 +276,7 @@ abstract mixin class _$ConversationRatingModelCopyWith<$Res> implements $Convers
   factory _$ConversationRatingModelCopyWith(_ConversationRatingModel value, $Res Function(_ConversationRatingModel) _then) = __$ConversationRatingModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String id, String user, String scenario, List<ConversationRatingRoundsModel> rounds, ConversationRatingStatsModel stats, int length, String createdAt, String updatedAt
+@JsonKey(name: '_id') String id, String user, String scenario, List<ConversationRatingRoundsModel> rounds, ConversationRatingStatsModel stats, int? length, String createdAt, String updatedAt
 });
 
 
@@ -293,15 +293,15 @@ class __$ConversationRatingModelCopyWithImpl<$Res>
 
 /// Create a copy of ConversationRatingModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? user = null,Object? scenario = null,Object? rounds = null,Object? stats = null,Object? length = null,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? user = null,Object? scenario = null,Object? rounds = null,Object? stats = null,Object? length = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_ConversationRatingModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,user: null == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
 as String,scenario: null == scenario ? _self.scenario : scenario // ignore: cast_nullable_to_non_nullable
 as String,rounds: null == rounds ? _self._rounds : rounds // ignore: cast_nullable_to_non_nullable
 as List<ConversationRatingRoundsModel>,stats: null == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
-as ConversationRatingStatsModel,length: null == length ? _self.length : length // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as ConversationRatingStatsModel,length: freezed == length ? _self.length : length // ignore: cast_nullable_to_non_nullable
+as int?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as String,
   ));

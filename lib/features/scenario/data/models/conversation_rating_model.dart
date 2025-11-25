@@ -11,7 +11,7 @@ abstract class ConversationRatingModel with _$ConversationRatingModel {
     required String scenario,
     required List<ConversationRatingRoundsModel> rounds,
     required ConversationRatingStatsModel stats,
-    required int length,
+    required int? length,
     required String createdAt,
     required String updatedAt,
   }) = _ConversationRatingModel;

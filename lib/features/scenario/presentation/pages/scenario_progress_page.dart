@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:go_router/go_router.dart';
 import 'package:odpalgadke/common/injection/dependency_injection.dart';
 import 'package:odpalgadke/features/auth/data/auth_secure_storage.dart';
+import 'package:odpalgadke/features/scenario/data/data_sources/scenario_data_source.dart';
 import 'package:odpalgadke/features/scenario/data/models/scenario_model.dart';
 import 'package:odpalgadke/features/scenario/presentation/scenario_progress_web_socket.dart';
 import 'package:path_provider/path_provider.dart';
@@ -110,13 +111,6 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
     _messageController.clear();
   }
 
-  void _disconnect() {
-    ws.disconnect();
-    setState(() {
-      connected = false;
-    });
-  }
-
   @override
   void dispose() {
     _messageController.dispose();
@@ -200,7 +194,6 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
     return Scaffold(
       headers: [
         AppBar(
-          title: Text("Konwersacja"),
           leading: [
             OutlineButton(
               density: ButtonDensity.icon,
@@ -210,8 +203,48 @@ class _ScenarioProgressPageState extends State<ScenarioProgressPage> {
           ],
           trailing: [
             PrimaryButton(
-              onPressed: connected ? _disconnect : _initTokenAndConnect,
-              child: Icon(connected ? Icons.link_off : Icons.link),
+              child: const Text('Zakończ i oceń'),
+              onPressed: () async {
+                showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: const Text('Zakończyć konwersację?'),
+                      content: const Text('Tego nie można cofnąć!'),
+                      actions: [
+                        OutlineButton(
+                          child: const Text('Anuluj'),
+                          onPressed: () {
+                            context.pop();
+                          },
+                        ),
+                        PrimaryButton(
+                          child: const Text('Zakończ'),
+                          onPressed: () async {
+                            ws.disconnect();
+
+                            if (ws.conversationId != null) {
+                              final either = await get<ScenarioDataSource>()
+                                  .fetchConversation(ws.conversationId!);
+
+                              either.fold((exception) => {}, (conversation) {
+                                context.pop();
+                                context.replace(
+                                  '/scenario/results',
+                                  extra: {
+                                    'conversation': conversation,
+                                    'scenario': widget.scenario,
+                                  },
+                                );
+                              });
+                            }
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
             ),
           ],
         ),

@@ -21,7 +21,7 @@ _ConversationRatingModel _$ConversationRatingModelFromJson(
   stats: ConversationRatingStatsModel.fromJson(
     json['stats'] as Map<String, dynamic>,
   ),
-  length: (json['length'] as num).toInt(),
+  length: (json['length'] as num?)?.toInt(),
   createdAt: json['createdAt'] as String,
   updatedAt: json['updatedAt'] as String,
 );

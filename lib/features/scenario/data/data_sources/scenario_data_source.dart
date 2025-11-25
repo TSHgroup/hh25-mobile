@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:odpalgadke/common/app/odpalgadke.dart';
+import 'package:odpalgadke/features/scenario/data/models/conversation_rating_model.dart';
 import 'package:odpalgadke/features/scenario/data/models/scenario_model.dart';
 
 class ScenarioDataSource {
@@ -53,6 +54,18 @@ class ScenarioDataSource {
     );
     if (response.statusCode == 200) {
       return Right(response.data);
+    }
+
+    return Left(response.data);
+  }
+
+  Future<Either<Map<String, dynamic>, ConversationRatingModel>>
+  fetchConversation(String conversationId) async {
+    Response response = await _dio.get(
+      '${centralUrl}user/me/conversations/$conversationId',
+    );
+    if (response.statusCode == 200) {
+      return Right(ConversationRatingModel.fromJson(response.data));
     }
 
     return Left(response.data);

@@ -14,6 +14,7 @@ class ScenarioProgressWebSocket {
   WebSocketChannel? _channel;
   bool isConnected = false;
   ScenarioModel? scenarioModel;
+  String? conversationId;
 
   final MessageCallback onMessage;
 
@@ -54,8 +55,9 @@ class ScenarioProgressWebSocket {
     final data = jsonDecode(event);
     switch (data['type']) {
       case 'started':
+        conversationId = data['conversationId'];
         onMessage(
-          "Start konwersacji - Id konwersacji: ${data['conversationId']}",
+          "Start konwersacji - Id konwersacji: $conversationId",
           "system",
         );
         if (scenarioModel != null) {
@@ -164,7 +166,7 @@ class ScenarioProgressWebSocket {
       }),
     );
 
-    onMessage("Sending audio...", "user");
+    onMessage("Wysyłanie audio...", "user");
   }
 
   void disconnect() {
