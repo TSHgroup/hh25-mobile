@@ -83,7 +83,7 @@ class AnalyticWidget extends StatelessWidget {
                 _buildStatCard(
                   context,
                   'Czas spędzony',
-                  '${_formatNumber(analytic.analytics.totalLength)}s',
+                  _formatNumber(analytic.analytics.totalLength),
                   Icons.text_fields,
                   theme.colorScheme.primary,
                 ),
@@ -167,7 +167,7 @@ class AnalyticWidget extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      width: 36.w,
+      width: 40.w,
       padding: EdgeInsets.all(2.w),
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -183,9 +183,10 @@ class AnalyticWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
+            mainAxisSize: MainAxisSize.min,
             spacing: 2.w,
             children: [
-              Icon(icon, color: color, size: 24.sp),
+              Icon(icon, color: color, size: 22.sp),
               Text(
                 value,
                 style: theme.typography.h2.copyWith(
@@ -327,7 +328,7 @@ class AnalyticWidget extends StatelessWidget {
   }
 
   String _getTrendsSummary(AnalyticTrendsModel trends) {
-    final items = <String>[];
+    final items = [];
 
     if (trends.conversations != null && trends.conversations != 0) {
       items.add(
